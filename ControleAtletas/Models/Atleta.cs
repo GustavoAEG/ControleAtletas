@@ -1,21 +1,44 @@
-﻿namespace ControleAtletas.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ControleAtletas.Models
 {
     public class Atleta
     {
+        [Key]
         public int AtletaID { get; set; }
 
+        [Required(ErrorMessage = "Informe o nome do Atleta")]
+        [StringLength(200,ErrorMessage ="O tamanho máximo são 200 caracteres")]
+        [Display(Name ="NomeCompleto")]
         public string NomeCompleto { get; set; }
 
+        [Required(ErrorMessage = "Informe o campo: Apelido")]
+        [StringLength(100, ErrorMessage ="O tamanho máximo são de 100 caracteres")]
+        [Display(Name ="Apelido")]
         public string Apelido { get; set; }
 
+        [Required(ErrorMessage = "Informe a Data de Nascimento")]
+        [Display(Name = "DataNascimento")]
         public DateTime DataNascimento { get; set; }
 
+        [Required(ErrorMessage = "Informe a Altura")]
+        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
+        [Display(Name = "Altura")]
         public float Altura { get; set; }
 
+        [Required(ErrorMessage = "Informe o Peso")]
+        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
+        [Display(Name = "Peso")]
         public float Peso { get; set; }
 
+        [Required(ErrorMessage = "Informe a Posição")]
+        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
+        [Display(Name = "Posicao")]
         public string Posicao { get; set; }
 
+        [Required(ErrorMessage = "Informe o número da camisa")]
+        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
+        [Display(Name = "NumeroCamisa")]
         public int NumeroCamisa { get; set; }
 
         public float CalcularIMC()
