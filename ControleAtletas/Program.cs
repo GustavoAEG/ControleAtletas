@@ -1,4 +1,5 @@
 namespace ControleAtletas;
+
 using Microsoft.AspNetCore.Hosting;
 
 public class Program
