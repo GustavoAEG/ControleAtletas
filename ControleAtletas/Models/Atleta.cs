@@ -22,22 +22,18 @@ namespace ControleAtletas.Models
         public DateTime DataNascimento { get; set; }
 
         [Required(ErrorMessage = "Informe a Altura")]
-        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
         [Display(Name = "Altura")]
         public float Altura { get; set; }
 
         [Required(ErrorMessage = "Informe o Peso")]
-        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
         [Display(Name = "Peso")]
         public float Peso { get; set; }
 
         [Required(ErrorMessage = "Informe a Posição")]
-        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
         [Display(Name = "Posicao")]
         public string Posicao { get; set; }
 
         [Required(ErrorMessage = "Informe o número da camisa")]
-        [StringLength(5, ErrorMessage = "O tamanho máximo são de 5 caracteres")]
         [Display(Name = "NumeroCamisa")]
         public int NumeroCamisa { get; set; }
 
