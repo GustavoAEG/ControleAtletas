@@ -4,11 +4,52 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    .alert-icon {
+        color: red;
+    }
+</style>
+<h1>Atletas cadastrados</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Incluir novo</a>
 </p>
+<form asp-controller="Atleta" asp-action="Index" method="get">
+    <div class="form-group">
+        <label for="filtro"><i class="bi bi-filter"></i>Filtrar por:</label><br /><br />
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="filtro" id="filtroCamisa" value="NumeroCamisa" checked>
+            <label class="form-check-label" for="filtroCamisa">
+                Número da Camisa
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="filtro" id="filtroApelido" value="Apelido">
+            <label class="form-check-label" for="filtroApelido">
+                Apelido
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="filtro" id="filtroIMC" value="IMC">
+            <label class="form-check-label" for="filtroIMC">
+                Classificação do IMC
+            </label>
+        </div><br /><br />
+    </div>
+    <div class="form-group">
+
+        <input type="text" id="filtroValor" name="filtroValor" class="form-control" placeholder="Digite o número da camisa (Ex: 5, 7, 9)" />
+    </div>
+    <button type="submit" class="btn btn-primary">
+        Filtrar<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+            <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+        </svg>
+    </button>
+
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -33,39 +74,92 @@
             <th>
                 @Html.DisplayNameFor(model => model.NumeroCamisa)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IMC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Classificacao)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomeCompleto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apelido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataNascimento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Altura)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Peso)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Posicao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroCamisa)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AtletaID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AtletaID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AtletaID">Delete</a>
-            </td>
-        </tr>
-}
+
+        @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
+        {
+            <div class="alert alert-warning" role="alert">
+                @ViewBag.AlertMessage
+            </div>
+        }
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.IMC > 22 ? "alert-row" : "")">
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeCompleto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apelido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataNascimento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Altura)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Peso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Posicao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroCamisa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IMC)
+                </td>
+                <td class="@(item.IMC > 25 ? "alert-cell" : "")">
+                    @Html.DisplayFor(modelItem => item.Classificacao)
+                    @if (item.IMC > 25)
+                    {
+                        <span class="alert-icon" title="IMC maior que 22">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
+                        </span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.AtletaID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.AtletaID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AtletaID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<script>
+
+    const filtroValorInput = document.getElementById("filtroValor");
+
+    document.querySelectorAll('input[type="radio"][name="filtro"]').forEach((radio) => {
+        radio.addEventListener("change", () => {
+    
+            switch (radio.value) {
+                case "NumeroCamisa":
+                    filtroValorInput.placeholder = "Digite o número da camisa (Ex: 5, 7, 9)";
+                    break;
+                case "Apelido":
+                    filtroValorInput.placeholder = "Digite o apelido (Ex: Fenômeno)";
+                    break;
+                case "IMC":
+                    filtroValorInput.placeholder = "Digite a classificação do IMC (Ex: normal)";
+                    break;
+                default:
+                    break;
+            }
+        });
+    });
+</script>

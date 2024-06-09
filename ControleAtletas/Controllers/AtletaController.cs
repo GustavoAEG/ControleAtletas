@@ -19,15 +19,61 @@ namespace ControleAtletas.Controllers
             _context = context;
         }
 
-        // GET: Atleta
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filtro, string filtroValor)
         {
-              return _context.Atleta != null ? 
-                          View(await _context.Atleta.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Atleta'  is null.");
+            if (_context == null || _context.Atleta == null)
+            {
+                return Problem("Entity set 'AppDbContext.Atleta' is null.");
+            }
+
+            IQueryable<Atleta> atletasQuery = _context.Atleta;
+
+            if (Request.Query.ContainsKey("filtro") && string.IsNullOrEmpty(filtroValor))
+            {
+                ViewBag.AlertMessage = "Informe um valor para o filtro.";
+            }
+            else
+            {
+                switch (filtro)
+                {
+                    case "NumeroCamisa":
+     
+                        if (!int.TryParse(filtroValor, out int numeroCamisa))
+                        {
+                            ViewBag.AlertMessage = "Para filtrar por número de camisa, informe apenas números.";
+                            return View(new List<Atleta>());
+                        }
+
+                        atletasQuery = atletasQuery.Where(a => a.NumeroCamisa.ToString() == filtroValor);
+                        break;
+
+                    case "Apelido":
+                        if (filtroValor.Any(char.IsDigit))
+                        {
+                            ViewBag.AlertMessage = "Para filtrar por apelido, informe apenas letras.";
+                            return View(new List<Atleta>());
+                        }
+                        atletasQuery = atletasQuery.Where(a => a.Apelido.Contains(filtroValor));
+                        break;
+
+                    case "IMC":
+                        if (filtroValor.Any(char.IsDigit))
+                        {
+                            ViewBag.AlertMessage = "Para filtrar por Classificação, informe apenas letras.";
+                            return View(new List<Atleta>());
+                        }
+                        atletasQuery = atletasQuery.Where(a => a.Classificacao.Contains(filtroValor));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var atletas = await atletasQuery.ToListAsync();
+
+            return View(atletas);
         }
 
-        // GET: Atleta/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Atleta == null)
@@ -45,19 +91,19 @@ namespace ControleAtletas.Controllers
             return View(atleta);
         }
 
-        // GET: Atleta/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Atleta/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AtletaID,NomeCompleto,Apelido,DataNascimento,Altura,Peso,Posicao,NumeroCamisa")] Atleta atleta)
         {
+            double imc = atleta.CalcularIMC();
+            atleta.IMC = imc;
+            atleta.ClassificarIMC(atleta.Classificacao);
+            atleta.IMC = double.Parse(imc.ToString("0.0"));
             if (ModelState.IsValid)
             {
                 _context.Add(atleta);
@@ -67,7 +113,6 @@ namespace ControleAtletas.Controllers
             return View(atleta);
         }
 
-        // GET: Atleta/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Atleta == null)
@@ -83,9 +128,6 @@ namespace ControleAtletas.Controllers
             return View(atleta);
         }
 
-        // POST: Atleta/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AtletaID,NomeCompleto,Apelido,DataNascimento,Altura,Peso,Posicao,NumeroCamisa")] Atleta atleta)
@@ -99,6 +141,9 @@ namespace ControleAtletas.Controllers
             {
                 try
                 {
+                    double imc = atleta.CalcularIMC();
+                    atleta.IMC = imc;
+                    atleta.ClassificarIMC(atleta.Classificacao);
                     _context.Update(atleta);
                     await _context.SaveChangesAsync();
                 }
@@ -118,7 +163,6 @@ namespace ControleAtletas.Controllers
             return View(atleta);
         }
 
-        // GET: Atleta/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Atleta == null)
@@ -136,7 +180,6 @@ namespace ControleAtletas.Controllers
             return View(atleta);
         }
 
-        // POST: Atleta/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

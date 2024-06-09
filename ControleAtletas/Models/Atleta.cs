@@ -23,11 +23,11 @@ namespace ControleAtletas.Models
 
         [Required(ErrorMessage = "Informe a Altura")]
         [Display(Name = "Altura")]
-        public float Altura { get; set; }
+        public double Altura { get; set; }
 
         [Required(ErrorMessage = "Informe o Peso")]
         [Display(Name = "Peso")]
-        public float Peso { get; set; }
+        public double Peso { get; set; }
 
         [Required(ErrorMessage = "Informe a Posição")]
         [Display(Name = "Posicao")]
@@ -37,37 +37,44 @@ namespace ControleAtletas.Models
         [Display(Name = "NumeroCamisa")]
         public int NumeroCamisa { get; set; }
 
-        public float CalcularIMC()
+        public double IMC { get; set; }
+
+        public string ?Classificacao { get; set; }
+
+        public double CalcularIMC()
         {
-            return Peso / (Altura * Altura);
+            return Peso / (Altura * Altura) * 10000;
         }
-        public string ClassificarIMC()
+
+        public string ClassificarIMC(string classificacao)
         {
-            float imc = CalcularIMC();
+            if (IMC < 18.5)
 
-            if (imc < 18.5)
+                Classificacao = "Abaixo do peso normal";
 
-                return "Abaixo do peso normal";
+            else if (IMC >= 18.5 && IMC <= 24.9)
 
-            else if (imc >= 18.5 && imc <= 24.9)
+                Classificacao = "Peso normal";
 
-                return "Peso normal";
+            else if (IMC >= 25.0 && IMC <= 29.9)
 
-            else if (imc >= 25.0 && imc <= 29.9)
+                Classificacao = "Excesso de peso";
 
-                return "Excesso de peso";
+            else if (IMC >= 30 && IMC <= 34.9)
 
-            else if (imc >= 30 && imc <= 34.9)
+                Classificacao = "Obesidade Classe I";
 
-                return "Obesidade Classe I";
+            else if (IMC >= 35.0 && IMC <= 39.9)
 
-            else if (imc >= 35.0 && imc <= 39.9)
-
-                return "Obesidade Classe II";
+                Classificacao = "Obesidade Classe II";
 
             else
 
-                return "Obesidade Classe III";
+                Classificacao = "Obesidade Classe III";
+
+             classificacao = Classificacao;
+
+            return classificacao;
         }
     }
 }
