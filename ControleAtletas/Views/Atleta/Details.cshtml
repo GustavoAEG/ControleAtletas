@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Detalhes</h1>
 
 <div>
     <h4>Atleta</h4>
@@ -25,20 +25,25 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DataNascimento)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataNascimento)
+
+        <dd class="col-sm-10">
+            @(Model.DataNascimento.Date.ToString("dd/MM/yyyy"))
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Altura)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Altura)
+
+        <dd class="col-sm-10">
+            @($"{(double)Model.Altura / 100.0:N2}")
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Peso)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Peso)
+
+        <dd class="col-sm-10">
+            @(string.Format("{0:F1}", Model.Peso))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Posicao)
@@ -56,5 +61,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.AtletaID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Voltar à lista de atletas</a>
 </div>

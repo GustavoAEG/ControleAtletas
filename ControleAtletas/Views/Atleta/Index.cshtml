@@ -39,7 +39,6 @@
         </div><br /><br />
     </div>
     <div class="form-group">
-
         <input type="text" id="filtroValor" name="filtroValor" class="form-control" placeholder="Digite o número da camisa (Ex: 5, 7, 9)" />
     </div>
     <button type="submit" class="btn btn-primary">
@@ -54,31 +53,31 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NomeCompleto)
+                Nome
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Apelido)
+                Apelido
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DataNascimento)
+                Data Nascimento
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Altura)
+                Altura
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Peso)
+                Peso
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Posicao)
+                Posição
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumeroCamisa)
+                Número da Camisa
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IMC)
+                IMC
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Classificacao)
+                Classificação
             </th>
             <th></th>
         </tr>
@@ -102,13 +101,15 @@
                     @Html.DisplayFor(modelItem => item.Apelido)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DataNascimento)
+                    @item.DataNascimento.ToString("dd/MM/yyyy")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Altura)
+                    @($"{item.Altura / 100.0:N2} m")
                 </td>
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.Peso)
+                    @item.Peso.ToString("0.0") kg
+
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Posicao)
@@ -146,7 +147,7 @@
 
     document.querySelectorAll('input[type="radio"][name="filtro"]').forEach((radio) => {
         radio.addEventListener("change", () => {
-    
+
             switch (radio.value) {
                 case "NumeroCamisa":
                     filtroValorInput.placeholder = "Digite o número da camisa (Ex: 5, 7, 9)";

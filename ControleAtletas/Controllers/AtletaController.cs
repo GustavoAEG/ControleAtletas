@@ -28,9 +28,10 @@ namespace ControleAtletas.Controllers
 
             IQueryable<Atleta> atletasQuery = _context.Atleta;
 
+
             if (Request.Query.ContainsKey("filtro") && string.IsNullOrEmpty(filtroValor))
             {
-                ViewBag.AlertMessage = "Informe um valor para o filtro.";
+                ViewBag.AlertMessage = "Por gentileza, informe um valor para o filtro.";
             }
             else
             {
@@ -71,6 +72,11 @@ namespace ControleAtletas.Controllers
 
             var atletas = await atletasQuery.ToListAsync();
 
+            foreach (var atleta in atletas)
+            {
+                atleta.DataNascimento = atleta.DataNascimento.Date;
+            }
+
             return View(atletas);
         }
 
@@ -99,7 +105,7 @@ namespace ControleAtletas.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AtletaID,NomeCompleto,Apelido,DataNascimento,Altura,Peso,Posicao,NumeroCamisa")] Atleta atleta)
-        {
+            {
             double imc = atleta.CalcularIMC();
             atleta.IMC = imc;
             atleta.ClassificarIMC(atleta.Classificacao);
@@ -144,6 +150,7 @@ namespace ControleAtletas.Controllers
                     double imc = atleta.CalcularIMC();
                     atleta.IMC = imc;
                     atleta.ClassificarIMC(atleta.Classificacao);
+                    atleta.IMC = double.Parse(imc.ToString("0.0"));
                     _context.Update(atleta);
                     await _context.SaveChangesAsync();
                 }
